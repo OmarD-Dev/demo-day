@@ -10,6 +10,7 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var flash    = require('connect-flash');
 
+var methodOverride = require('method-override')
 var morgan       = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
@@ -36,7 +37,7 @@ app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser.json()); // get information from html forms
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'))
-
+app.use(methodOverride('_method'))
 
 app.set('view engine', 'ejs'); // set up ejs for templating
 

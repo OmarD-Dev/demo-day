@@ -1,3 +1,5 @@
+const { ObjectID, ObjectId } = require("mongodb");
+
 module.exports = function(app, passport, db) {
 
 // normal routes ===============================================================
@@ -8,15 +10,64 @@ module.exports = function(app, passport, db) {
     });
 
     // PROFILE SECTION =========================
-    app.get('/profile', isLoggedIn, function(req, res) {
-        db.collection('posts').find().toArray((err, result) => {
+    app.get('/profile', isLoggedIn, function(req, res) { 
+      if(req.user.local.userType ==="researcher"){
+      db.collection('studies').find({researcherId: req.user._id}).toArray((err, result) => {
           if (err) return console.log(err)
-          res.render('profile.ejs', {
+          console.log('This is the studies: ',result)
+          res.render('researcherProfile.ejs', {
             user : req.user,
-            posts: result
+            studies: result
           })
         })
+      }else if (req.user.local.userType ==="participant"){
+        db.collection('studies').find().toArray((err, result) => {
+          if (err) return console.log(err)
+          console.log('This is the studies: ',result)
+          res.render('participantProfile.ejs', {
+            user : req.user,
+            studies: result
+          })
+        })
+      }
     });
+
+    //Research Post=============
+  
+  // VIEW STUDY ===============================
+  app.get('/studyDetails/:currentStudy', isLoggedIn, function(req, res) {
+    db.collection('studies').find({_id: ObjectId(req.params.currentStudy)}).toArray((err, result) => {
+      console.log('Stud details result : ', result)
+      if (err) return console.log(err)
+      const study = result[0]
+      study.isParticipant = study.participants.indexOf(req.user._id.toString()) !== -1
+      console.log('Here is the study: ', study)
+      console.log('the user id :[%s]', req.user._id)
+      res.render('studyView.ejs', {
+        user : req.user,
+        study
+      })
+    })
+  });
+
+  app.put('/studySignup/:currentStudy/:participant', (req, res) => {
+    // console.log("description: ", req.body.description)
+    console.log('parameters: ', req.params.currentStudy , req.params.participant)
+    db.collection('studies')
+    .findOneAndUpdate({_id: ObjectId(req.params.currentStudy)}, {
+      $push: {
+        participants: req.params.participant
+      }
+    }, {
+      sort: {_id: -1},
+      upsert: false
+    }, (err, result) => {
+      if (err) return res.send(err)
+      res.redirect('/profile')
+    })
+  })
+  
+
 
     // LOGOUT ==============================
     app.get('/logout', function(req, res) {
@@ -24,52 +75,76 @@ module.exports = function(app, passport, db) {
         res.redirect('/');
     });
 
-// message board routes ===============================================================
 
-    app.post('/create', (req, res) => {
-      db.collection('posts').insertOne({name: req.body.name, msg: req.body.msg, thumbUp: 0, thumbDown:0}, (err, result) => {
+
+// STUDY CREATE ===========================================
+
+    app.get('/createStudy', isLoggedIn, function(req, res) {
+      db.collection('studies').find().toArray((err, result) => {
+        if (err) return console.log(err)
+        res.render('researchPost.ejs', {
+          user : req.user,
+
+        })
+      })
+    });
+
+    app.post('/createStudy', (req, res) => {
+      db.collection('studies').insertOne({
+        researcherId: ObjectId(req.body.researcherId),
+        name: req.body.name, 
+        title: req.body.title,
+        participants: [],
+        type: req.body.type,
+        description: req.body.description
+        }, (err, result) => {
         if (err) return console.log(err)
         console.log('saved to database')
         res.redirect('/profile')
       })
     })
-
-    app.put('/feed', (req, res) => {
-      db.collection('posts')
-      .findOneAndUpdate({name: req.body.name, msg: req.body.msg}, {
-        $set: {
-          thumbUp:req.body.thumbUp + 1
-        }
-      }, {
-        sort: {_id: -1},
-        upsert: true
+    app.delete('/createStudy', (req, res) => {
+      db.collection('studies').findOneAndDelete({
+        title: req.body.title,
+        type: req.body.type,
+        description: req.body.description
       }, (err, result) => {
-        if (err) return res.send(err)
-        res.send(result)
-      })
-    })
-
-    app.put('/change', (req, res) => {
-      db.collection('posts')
-      .findOneAndUpdate({name: req.body.name, msg: req.body.msg}, {
-        $set: {
-          thumbUp:req.body.thumbUp - 1
-        }
-      }, {
-        sort: {_id: -1},
-        upsert: true
-      }, (err, result) => {
-        if (err) return res.send(err)
-        res.send(result)
-      })
-    })
-
-    app.delete('/delete', (req, res) => {
-      db.collection('posts').findOneAndDelete({name: req.body.name, msg: req.body.msg}, (err, result) => {
         if (err) return res.send(500, err)
         res.send('Message deleted!')
       })
     })
+
+// EDIT POST ======================================
+app.get('/editStudy/:currentStudy', isLoggedIn, function(req, res) {
+  db.collection('studies').find({_id: ObjectId(req.params.currentStudy)}).toArray((err, result) => {
+    console.log(result)
+    if (err) return console.log(err)
+    res.render('editStudy.ejs', {
+      user : req.user,
+      study: result
+    })
+  })
+});
+
+app.put('/editStudy/:currentStudy', (req, res) => {
+  // console.log("description: ", req.body.description)
+  console.log('parameters: ', req.params.currentStudy)
+  db.collection('studies')
+  .findOneAndUpdate({_id: ObjectId(req.params.currentStudy)}, {
+    $set: {
+      name: req.body.name, 
+      title: req.body.title,
+      type: req.body.type,
+      description: req.body.description
+    }
+  }, {
+    sort: {_id: -1},
+    upsert: false
+  }, (err, result) => {
+    if (err) return res.send(err)
+    res.redirect('/profile')
+  })
+})
 
 // =============================================================================
 // AUTHENTICATE (FIRST LOGIN) ==================================================

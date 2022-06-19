@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <title>Volummity</title>
+    <title>Researchify</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="style.css">
@@ -10,8 +10,7 @@
 <div class="container">
 
     <div class="page-header text-center">
-        <h1></span> Your Feed</h1>
-        
+        <h1>Research Post</h1>
     </div>
 
     <div class="row">
@@ -36,28 +35,26 @@
             </div>
         </div>
         <div class="col-sm-6">
-          <h3>Posts</h3>
-          <ul class="messages">
-          <% for(var i=0; i<posts.length; i++) {%>
-            <li class="message">
-              <span><%= posts[i].name %></span>
-              <span><%= posts[i].msg %></span>
-              <span><%= posts[i].thumbUp %></span>
-              <span><i class="fa fa-thumbs-up" aria-hidden="true"></i></span>
-              <span><i class="fa fa-thumbs-down" aria-hidden="true"></i></span>
-              <span><i class="fa fa-ban" aria-hidden="true"></i></span>
-            </li>
-          <% } %>
-          </ul>
 
-          <h2>Add a message</h2>
+          <h2>Edit Your Study</h2>
         <% if (user.local.email) { %>
-          <form action="/create" method="POST">
-            <input type="text" value="<%= user.local.email %>" name="name">
-            <input type="text" placeholder="message" name="msg">
-            <button type="submit">Submit</button>
+          <% for(let i=0; i<study.length; i++) {%>
+          <!-- using method overide package to overide the post route as a put. The query overides post-->
+          <form action="/editStudy/<%= study[i]._id %>?_method=PUT" method="POST">
+            <input  type="text" value="<%= user._id %>" name="researcherId" hidden>
+            <label for="name">Researcher's name</label>
+            <input class="form-control" type="text" value="<%= study[i].name %>" name="name">
+            <label class="form-label" for="title">Title of Your Study</label>
+            <input class="form-control" type="text" value="<%= study[i].title %>"placeholder="Title of Study" name="title">
+            <label class="form-label"for="type">Type of Study</label>
+            <input class="form-control"  type="text" value="<%= study[i].type %>"placeholder="Study type" name="type">
+            <label class="form-label" for="description">Description of Your Study</label>
+            <textarea class="form-control" name="description" id="description" cols="30" rows="10"><%= study[i].description %></textarea>
+            
+            <button >Submit</button>
           </form>
         </div>
+          <% } %>
         <% } %>
 
 </div>
@@ -66,3 +63,4 @@
 
 </body>
 </html>
+ 
