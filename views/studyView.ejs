@@ -2,57 +2,47 @@
 <html>
 <head>
     <title>Researchify</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+    <%- include('partials/nav.ejs') %>
     <div class="container">
 
         <div class="page-header text-center">
-            <h1></span> Study View</h1>
-            
+            <h1> Study View/Agreement</h1>  
         </div>
 
         <div class="row">
-
-            <!-- LOCAL INFORMATION -->
-            <div class="col-sm-6">
-                <div class="well">
-                    <h3>Your Profile</h3>
-                    <a href="/logout" class="btn btn-default btn-sm">Logout</a>
-                    <% if (user.local.email) { %>
-                        <p class="hidden">
-                            <strong>id</strong>: <%= user._id %><br>
-                            <strong>email</strong>: <%= user.local.email %><br>
-                            <strong>password</strong>: <%= user.local.password %>
-                        </p>
-                        <a href="/createStudy" class=" btn btn-default">Create Study</a>
-                        <a href="/unlink/local" class=" hidden btn btn-default">Unlink</a>
-                    <% } else { %>
-                        <a href="/connect/local" class=" hidden btn btn-default">Connect Local</a>
-                    <% } %>
-
-                </div>
-            </div>
-            <div class="col-sm-6">
-                        <h3><%= study.title %></h3>
+            <div class="col">
                       <div class="card-body">
-                        <span class="hidden"><%= study._id %></span>
                         
                         <p class="card-text"><%= study.participants %></p>
-                        <h4 class="card-title"><%= study.title %></h4>
-                        <h5 class="card-subtitle mb-2 text-muted"><%= study.type %></h5>
+                        <h2 class="card-title"><%= study.title %></h2>
+                        <h3 class="card-subtitle mb-2 text-muted"><%= study.type %></h3>
+                        <h4>Description:</h4>
                         <p class="card-text"><%= study.description %></p>
-                        <span><i class="fa fa-ban" aria-hidden="true"></i></span>
+                        <h4>Consent:</h4>
+                        <p class="card-text"><%= study.consent %></p>
                       </div>
                     </div>
+                    <div>
+                    <h5>Check to Agree:</h5>
                     <% if (!study.isParticipant){ %>
                     <form action="/studySignup/<%= study._id  %>/<%= user._id  %>?_method=PUT" method="POST">
-                        <input type="submit" name="signupSubmit" id="signupBtn">
+                        <div class="form-group">
+                            <input type="checkbox" class="form-check-input" id="consent" required>
+                            <label class="form-check-label" for="consent">I have read and agreed to the requirements of the study.</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" name="signupSubmit" id="signupBtn">
+                        </div>
                     </form>
                     <% } %>
-                
+                </div>
+        <div>       
     </div>
 
 

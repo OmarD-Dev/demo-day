@@ -2,41 +2,25 @@
 <html>
 <head>
     <title>Researchify</title>
-    <%- include('partials/bootstrap.ejs') %>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <!-- THIS IS THE OTHER PAGE -->
-<% if(user.local.userType==="participant"){ %>
+
     <%- include('partials/nav.ejs') %>
 <div class="container">
 
   <div class="page-header text-center">
-      <h1>Participant Profile</h1>
+      <h1>Search Results</h1>
       
   </div>
 
   <div class="row">
 
       <!-- LOCAL INFORMATION -->
-      <div class="col">
-          <div class="well ">
-              <h3>Your Profile</h3>
-              
-              <% if (user.local.email) { %>
-                  <p class="">
-                      <strong>Name</strong>: <%= user.local.fullName %><br>
-                      <strong>Organization</strong>: <%= user.local.organization %><br>
-                  </p>
-              
-                  <a href="/unlink/local" class=" hidden btn btn-default">Unlink</a>
-              <% } else { %>
-                  <a href="/connect/local" class=" hidden btn btn-default">Connect Local</a>
-              <% } %>
-
-          </div>
-      </div>
-      <div class="row">
-        <h3>Studies You Can Join</h3>
+       
         <% for(let i=0; i<studies.length; i++) {%>
             <div class="col-sm-4">
                 <div class="card mb-4 box-shadow">
@@ -55,14 +39,11 @@
                 </div>
             </div>
   <% } %>
-      </div>
-</div>
 
-
+  
     
 </div>
 
-<% } %>
 <script src="main.js"></script>
 
 </body>

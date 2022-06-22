@@ -1,0 +1,13 @@
+<% for(let i=0; i<studies.length; i++) {%>
+    <div class="card" style="width: 18rem;">
+      <div class="card-body">
+        <span class="hidden"><%= studies[i]._id %></span>
+        <h4 class="card-title"><%= studies[i].title %></h4>
+        <h5 class="card-subtitle mb-2 text-muted"><%= studies[i].type %></h5>
+        <p class="card-text"><%= studies[i].description %></p>
+        <p>Participants: <%= studies[i].participants.length %></p>
+        <a href="/studyDetails/<%= studies[i]._id %>"><button> Sign Up</button></a>
+      </div>
+    </div>
+  </li>
+<% } %>

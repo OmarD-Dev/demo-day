@@ -2,41 +2,22 @@
 <html>
 <head>
     <title>Researchify</title>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+  <%- include('partials/nav.ejs') %>
 <div class="container">
-
     <div class="page-header text-center">
-        <h1>Research Post</h1>
+        <h1>Edit Your Study</h1>
     </div>
 
     <div class="row">
+        <div class="col">
 
-        <!-- LOCAL INFORMATION -->
-        <div class="col-sm-6">
-            <div class="well">
-                <h3>Your Profile</h3>
-                <a href="/logout" class="btn btn-default btn-sm">Logout</a>
-                <% if (user.local.email) { %>
-                    <p class="hidden">
-                        <strong>id</strong>: <%= user._id %><br>
-                        <strong>email</strong>: <%= user.local.email %><br>
-                        <strong>password</strong>: <%= user.local.password %>
-                    </p>
-
-                    <a href="/unlink/local" class=" hidden btn btn-default">Unlink</a>
-                <% } else { %>
-                    <a href="/connect/local" class=" hidden btn btn-default">Connect Local</a>
-                <% } %>
-
-            </div>
-        </div>
-        <div class="col-sm-6">
-
-          <h2>Edit Your Study</h2>
+          <h2>Edits</h2>
         <% if (user.local.email) { %>
           <% for(let i=0; i<study.length; i++) {%>
           <!-- using method overide package to overide the post route as a put. The query overides post-->
@@ -50,7 +31,8 @@
             <input class="form-control"  type="text" value="<%= study[i].type %>"placeholder="Study type" name="type">
             <label class="form-label" for="description">Description of Your Study</label>
             <textarea class="form-control" name="description" id="description" cols="30" rows="10"><%= study[i].description %></textarea>
-            
+            <label class="form-label" for="IRB Consent">Participant Consent</label>
+            <textarea class="form-control" name="consent" id="consent" cols="30" rows="10">Include your consent specifications here.</textarea>
             <button >Submit</button>
           </form>
         </div>

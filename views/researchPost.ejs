@@ -2,40 +2,17 @@
 <html>
 <head>
     <title>Researchify</title>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-    <link rel="stylesheet" href="style.css">
+    <%- include('partials/bootstrap.ejs') %>
 </head>
 <body>
 <div class="container">
-
+  <%- include('partials/nav.ejs') %>
     <div class="page-header text-center">
         <h1></span> Research Post</h1>
         
     </div>
 
-    <div class="row">
-
-        <!-- LOCAL INFORMATION -->
-        <div class="col-sm-6">
-            <div class="well">
-                <h3>Your Profile</h3>
-                <a href="/logout" class="btn btn-default btn-sm">Logout</a>
-                <% if (user.local.email) { %>
-                    <p class="hidden">
-                        <strong>id</strong>: <%= user._id %><br>
-                        <strong>email</strong>: <%= user.local.email %><br>
-                        <strong>password</strong>: <%= user.local.password %>
-                    </p>
-
-                    <a href="/unlink/local" class=" hidden btn btn-default">Unlink</a>
-                <% } else { %>
-                    <a href="/connect/local" class=" hidden btn btn-default">Connect Local</a>
-                <% } %>
-
-            </div>
-        </div>
-        <div class="col-sm-6">
+        <div class="col">
 
           <h2>Create Study</h2>
         <% if (user.local.email) { %>
@@ -45,15 +22,27 @@
             <input class="form-control" type="text" value="<%= user.local.email %>" name="name">
             <label class="form-label" for="title">Title of Your Study</label>
             <input class="form-control" type="text" placeholder="Title of Study" name="title">
+            <label class="form-label" for="organization">Organization</label>
+            <input class="form-control" type="text" placeholder="Organization" name="organization">
             <label class="form-label"for="type">Type of Study</label>
-            <input class="form-control"  type="text" placeholder="Study type" name="type">
+            <select class="form-select" aria-label="Default select example" name="type">
+              <option selected>Select Your Study Type</option>
+              <option value="Survey">Survey</option>
+              <option value="Participant Observation">Participant Observation</option>
+              <option value="Interview">Interview</option>
+              <option value="Experiment">Experiment</option>
+              <option value="Mixed Methods">Mixed Methods</option>
+            </select>
             <label class="form-label" for="description">Description of Your Study</label>
             <textarea class="form-control" name="description" id="description" cols="30" rows="10"></textarea>
             
+            <label class="form-label" for="IRB Consent">Participant Consent</label>
+            <textarea class="form-control" name="consent" id="consent" cols="30" rows="10">Include your consent specifications here.</textarea>
             <button type="submit">Submit</button>
           </form>
-        </div>
+        
         <% } %>
+      </div>
 
 </div>
 

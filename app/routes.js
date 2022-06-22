@@ -31,7 +31,20 @@ module.exports = function(app, passport, db) {
         })
       }
     });
-
+    // SEARCH BAR ===============================================
+      
+    app.post('/search', (req, res) => {
+     
+      let regex = new RegExp( req.body.searchBar, "i")
+      db.collection('studies').find({ $or: [{title: regex}, {description: regex}, {type: regex}, {organization: regex}] }).toArray( (err, result) => {
+        if (err) return console.log(err)
+        console.log('saved to database') 
+        console.log(result)
+        res.render('searchResults.ejs', {
+          studies: result
+        })
+      })
+    })
     //Research Post=============
   
   // VIEW STUDY ===============================
@@ -96,7 +109,9 @@ module.exports = function(app, passport, db) {
         title: req.body.title,
         participants: [],
         type: req.body.type,
-        description: req.body.description
+        description: req.body.description,
+        consent: req.body.consent,
+        organization: req.body.organization
         }, (err, result) => {
         if (err) return console.log(err)
         console.log('saved to database')
@@ -135,7 +150,9 @@ app.put('/editStudy/:currentStudy', (req, res) => {
       name: req.body.name, 
       title: req.body.title,
       type: req.body.type,
-      description: req.body.description
+      description: req.body.description,
+      consent: req.body.consent,
+      organization: req.body.organization
     }
   }, {
     sort: {_id: -1},
