@@ -29,14 +29,10 @@ Array.from(edit).forEach(function(element) {
 
 Array.from(trash).forEach(function(element) {
       element.addEventListener('click', function(){
-        console.log('What is this? : ', this.parentNode.parentNode.childNodes[2])
-        // const title = this.parentNode.parentNode.childNodes[3].innerText
-        // const type = this.parentNode.parentNode.childNodes[4].innerText
-        // const description = this.parentNode.parentNode.childNodes[5].innerText
-        const title = this.parentNode.parentNode.querySelector('.card-title').innerText
-        const type = this.parentNode.parentNode.querySelector('.card-subtitle').innerText
-        const description = this.parentNode.parentNode.querySelector('.card-text').innerText
         
+        const title = this.parentNode.parentNode.parentNode.querySelector('.card-title').innerText
+        const type = this.parentNode.parentNode.parentNode.querySelector('.card-subtitle').innerText
+        const description = this.parentNode.parentNode.parentNode.querySelector('.card-text').innerText
         fetch('createStudy', {
           method: 'delete',
           headers: {
@@ -45,7 +41,7 @@ Array.from(trash).forEach(function(element) {
           body: JSON.stringify({
             'title': title,
             'type': type,
-            'description': description
+            'description': description,
           })
         }).then(function (response) {
           window.location.reload(true)
